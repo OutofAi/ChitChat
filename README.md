@@ -30,9 +30,9 @@
 <h2 dir="auto" tabindex="-1">Deploy</h2>
 <p>There are two examples avaiable here and depending on cost you can choose which one you like to deploy. We recommend deploying the cpu version first before attempting the gpu one. To deploy the model to create an inference endpoint API you only need to run this command.</p>
 <p>CPU version:</p>
-<pre>modal deploy llamacpp-cpu.py</pre>
+<pre>modal deploy chitchat-cpu.py</pre>
 <p>GPU version (Running on T4):</p>
-<pre>modal deploy llamacpp-gpu.py</pre>
+<pre>modal deploy chitchat-gpu.py</pre>
 <p>After a successful deployment you will be given entrypoint link in this format</p>
 <pre>View Deployment: https://[ORG_NAME]--[NAME]-entrypoint.modal.run</pre>
 <h2 dir="auto" tabindex="-1">Inference</h2>
