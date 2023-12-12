@@ -21,6 +21,8 @@
 <pre>View Deployment: https://[ORG_NAME]--[FILENAME]-entrypoint.modal.run</pre>
 <h2 dir="auto" tabindex="-1">Inference</h2>
 <p>We put together a website https://chitchatsource.com/ to simplify and enhance user experience, provide the deployment link on that page to run inference on your model.</p>
-<p>Another simple method to run inference is through running a CURL command based on the entrypoint link provided after deployment</p>
-<pre>CURL "https://[ORG_NAME]--[FILENAME]-entrypoint.modal.run/llama?question=If+you+could+choose+one+type+of+cheese+to+be+the+ruler+of+a+cheese+kingdom%2C+which+cheese+would+it+be+and+why"</pre>
+
+![url_input](https://github.com/OutofAi/ChitChatSource/assets/145302363/79a79b25-5d5b-4e81-b972-b49cc472de66)
+
+After saving your deployment link you should be able to run inference on the model.
 
