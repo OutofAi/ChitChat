@@ -34,7 +34,7 @@ image = (
     .run_function(download_model)
 )
 
-stub = Stub("chitchat-T4", image=image)
+stub = Stub("chitchat-gpu", image=image)
 
 @stub.cls(gpu=gpu.T4(count=1))
 class llamacpp:
