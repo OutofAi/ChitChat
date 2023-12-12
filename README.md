@@ -2,6 +2,20 @@
   <img src="https://github.com/OutofAi/ChitChatSource/assets/145302363/798510c4-c92f-47f3-8728-738f5b1333bc" alt="logo">
 </p>
 
+<table style="border-collapse: collapse; width: 100%;" border="1" align="center">
+<tbody>
+<tr>
+<td style="width: 100%;">GPU variation</td>
+</tr>
+<tr>
+<td style="width: 100%;"><p align="center">
+  <img src="https://github.com/OutofAi/ChitChatSource/assets/145302363/08c3d21f-6d70-4e33-a3aa-a4c40a30ae6d" alt="hello world">
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+
 <p>This is the first part of a collection of templates we are working on for promoting the concept of Model as a Serivce (MaaS). Mainly revolving around using Firebase/Modal/Stripe. One of the user friendliest and cheapest way to deploy your model and creating inference endpoint API is <a href="https://modal.com/">Modal</a>. This example shows the simplicity of deploying OpenHermes-2.5-Mistral with only few lines of code and deploying it on Modal. But you can change it to any model that is supported by LLamacpp</p>
 <hr />
 <p>Follow us on X for updates regarding the other templates<br /><a href="https://twitter.com/OutofAi">https://twitter.com/OutofAi</a><br /><a href="https://twitter.com/banterless_ai">https://twitter.com/banterless_ai</a></p>
@@ -20,7 +34,7 @@
 <p>GPU version (Running on T4):</p>
 <pre>modal deploy llamacpp-gpu.py</pre>
 <p>After a successful deployment you will be given entrypoint link in this format</p>
-<pre>View Deployment: https://[ORG_NAME]--[FILENAME]-entrypoint.modal.run</pre>
+<pre>View Deployment: https://[ORG_NAME]--[NAME]-entrypoint.modal.run</pre>
 <h2 dir="auto" tabindex="-1">Inference</h2>
 <p>We put together a website https://chitchatsource.com/ to simplify and enhance user experience, provide the deployment link on that page to run inference on your model.</p>
 
