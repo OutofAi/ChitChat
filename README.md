@@ -42,5 +42,5 @@
   <img src="https://github.com/OutofAi/ChitChatSource/assets/145302363/79a79b25-5d5b-4e81-b972-b49cc472de66" alt="ChitChat-Settings">
 </p>
 
-<p>After saving your deployment link you should be able to run inference on the model. You can use this website for running local FastAPI inference endpoint as well. You just need to make sure the formating and parameters expected matches the one provided in this example. I will do a different repository related to that./p>
+<p>After saving your deployment link you should be able to run inference on the model. You can use this website for running local FastAPI inference endpoint as well. You just need to make sure the formating and parameters expected matches the one provided in this example. I will do a different repository related to that.</p>
 
