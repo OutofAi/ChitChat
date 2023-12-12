@@ -1,4 +1,4 @@
-from modal import Image, Stub, method, asgi_app
+from modal import Image, Stub, method, asgi_app, gpu
 from fastapi import FastAPI, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette import EventSourceResponse
@@ -25,23 +25,22 @@ def download_model():
     hf_hub_download(repo_id=MODEL_REPOS, filename=MODEL_FILENAME, local_dir=MODEL_DIR)
 
 image = (
-    Image.from_registry("ubuntu:22.04", add_python="3.10")
+    Image.from_registry("nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04", add_python="3.9")
     .apt_install("build-essential")
     .pip_install(
-        "llama-cpp-python",
         "huggingface_hub",
         "sse_starlette",
-    )
+    ).run_commands("CMAKE_ARGS=\"-DLLAMA_CUBLAS=on\" FORCE_CMAKE=1 pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir", gpu=gpu.T4())
     .run_function(download_model)
 )
 
-stub = Stub("modalcpp-cpu", image=image)
+stub = Stub("chitchat-T4", image=image)
 
-@stub.cls(cpu=1)
+@stub.cls(gpu=gpu.T4(count=1))
 class llamacpp:
     def __enter__(self):
         from llama_cpp import Llama
-        self.llama = Llama(MODEL_DIR + "/" + MODEL_FILENAME, n_ctx=4096)
+        self.llama = Llama(MODEL_DIR + "/" + MODEL_FILENAME, n_ctx=4096, n_gpu_layers=-1, verbose=True)
     @method(is_generator=True)
     def predict(self, question: str, context: str):
 
@@ -68,7 +67,7 @@ class llamacpp:
 @stub.function()
 @web_app.get("/llama")
 async def handle_llama_query(request: Request, question: str, context: List[str] = Query(None)):
-    
+
     formatted_context = ""
 
     if context and len(context) % 2 == 0:        
