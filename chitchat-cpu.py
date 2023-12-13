@@ -5,8 +5,8 @@ from sse_starlette import EventSourceResponse
 from typing import List
 
 MODEL_DIR = "/model"
-MODEL_FILENAME = "openhermes-2.5-mistral-7b.Q6_K.gguf"
-MODEL_REPOS = "TheBloke/OpenHermes-2.5-Mistral-7B-GGUF"
+MODEL_FILENAME = "mistral-7b-instruct-v0.1.Q6_K.gguf"
+MODEL_REPOS = "TheBloke/Mistral-7B-Instruct-v0.1-GGUF"
 
 incontext = ""
 
