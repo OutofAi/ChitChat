@@ -45,13 +45,13 @@ class llamacpp:
     @method(is_generator=True)
     def predict(self, question: str, context: str):
 
-        formatted_question = f"<s>{context}[INST]{question}[/INST][INST]"
+        formatted_question = f"{context}<s>[INST]{question}[/INST]"
         
         return self.llama(
         formatted_question,
         temperature=0.1,
         max_tokens=-1,
-        stop=["[/INST]"],
+        stop=["</s>"],
         stream=True,
         echo=True
         )
@@ -64,7 +64,7 @@ async def handle_llama_query(request: Request, question: str, context: List[str]
 
     if context and len(context) % 2 == 0:        
         for i in range(0, len(context), 2):
-            formatted_context += f"[INST]{context[i]}[/INST][INST]{context[i+1]}[/INST]"
+            formatted_context += f"<s>[INST]{context[i]}[/INST]{context[i+1]}</s>"
 
     stream = llamacpp().predict.remote_gen(question, formatted_context)
 
