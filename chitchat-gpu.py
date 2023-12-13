@@ -5,8 +5,8 @@ from sse_starlette import EventSourceResponse
 from typing import List
 
 MODEL_DIR = "/model"
-MODEL_FILENAME = "mistral-7b-instruct-v0.1.Q6_K.gguf"
-MODEL_REPOS = "TheBloke/Mistral-7B-Instruct-v0.1-GGUF"
+MODEL_FILENAME = "mistral-7b-instruct-v0.2.Q8_0.gguf"
+MODEL_REPOS = "TheBloke/Mistral-7B-Instruct-v0.2-GGUF"
 
 incontext = ""
 
@@ -44,7 +44,7 @@ class llamacpp:
     @method(is_generator=True)
     def predict(self, question: str, context: str):
 
-        formatted_question = f"<s>{context}[INST]{question}[/INST]"
+        formatted_question = f"<s>{context}[INST]{question}[/INST][INST]"
         
         return self.llama(
         formatted_question,
