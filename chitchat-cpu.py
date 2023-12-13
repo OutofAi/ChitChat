@@ -45,22 +45,13 @@ class llamacpp:
     @method(is_generator=True)
     def predict(self, question: str, context: str):
 
-        if context:
-            system_message = """
-            Follow the instructions below to complete the task. At the best of your ability guess what the user wants and answer it coherently
-            """
-            formatted_question = f"<|im_start|>system{system_message}<|im_end|>{context}<|im_start|>user{question}<|im_end|><|im_start|>assistant"
-        else:
-            system_message = """
-            Follow the instructions below to complete the task. At the best of your ability guess what the user wants and answer it coherently
-            """
-            formatted_question = f"<|im_start|>system{system_message}<|im_end|><|im_start|>user{question}<|im_end|><|im_start|>assistant"
+        formatted_question = f"<s>{context}[INST]{question}[/INST]"
         
         return self.llama(
         formatted_question,
         temperature=0.1,
         max_tokens=-1,
-        stop=["<|im_end|>"],
+        stop=["[/INST]"],
         stream=True,
         echo=True
         )
@@ -73,7 +64,7 @@ async def handle_llama_query(request: Request, question: str, context: List[str]
 
     if context and len(context) % 2 == 0:        
         for i in range(0, len(context), 2):
-            formatted_context += f"<|im_start|>user{context[i]}<|im_end|><|im_start|>assistant{context[i+1]}<|im_end|>"
+            formatted_context += f"[INST]{context[i]}[/INST][INST]{context[i+1]}[/INST]"
 
     stream = llamacpp().predict.remote_gen(question, formatted_context)
 
