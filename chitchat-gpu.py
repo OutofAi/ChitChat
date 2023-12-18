@@ -12,7 +12,7 @@ incontext = ""
 
 web_app = FastAPI()
 
-CORS_ORIGIN_WHITELIST = 'https://chitchatsource.com'
+CORS_ORIGIN_WHITELIST = ['https://chitchatsource.com', 'https://www.chitchatsource.com']
 
 web_app.add_middleware(
     CORSMiddleware,
