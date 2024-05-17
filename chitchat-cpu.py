@@ -1,4 +1,4 @@
-from modal import Image, Stub, method, asgi_app
+from modal import Image, App, method, enter, asgi_app
 from fastapi import FastAPI, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette import EventSourceResponse
@@ -38,11 +38,12 @@ image = (
     .run_function(download_model)
 )
 
-stub = Stub("chitchat-cpu", image=image)
+app = App("chitchat-cpu", image=image)
 
-@stub.cls(cpu=1)
+@app.cls(cpu=1)
 class llamacpp:
-    def __enter__(self):
+    @enter()
+    def load_model(self):
         from llama_cpp import Llama
         self.llama = Llama(MODEL_DIR + "/" + MODEL_FILENAME, n_ctx=4096)
     @method(is_generator=True)
@@ -59,7 +60,7 @@ class llamacpp:
         echo=True
         )
 
-@stub.function()
+@app.function()
 @web_app.get("/llama")
 async def handle_llama_query(request: Request, question: str, context: List[str] = Query(None)):
     
@@ -80,7 +81,7 @@ async def handle_llama_query(request: Request, question: str, context: List[str]
 
     return EventSourceResponse(stream_responses())
 
-@stub.function()
+@app.function()
 @asgi_app()
 def entrypoint():
     return web_app
