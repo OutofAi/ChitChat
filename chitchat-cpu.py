@@ -29,12 +29,13 @@ def download_model():
 
 image = (
     Image.from_registry("ubuntu:22.04", add_python="3.10")
-    .apt_install("build-essential")
+    .apt_install("build-essential", "clang")  # Install Clang
     .pip_install(
-        "llama-cpp-python",
         "huggingface_hub",
         "sse_starlette",
-    )
+    ).run_commands(
+        "export CC=clang",  # Set the CC environment variable to clang
+        "pip install llama-cpp-python==0.2.64")
     .run_function(download_model)
 )
 
