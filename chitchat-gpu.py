@@ -27,12 +27,14 @@ def download_model():
     hf_hub_download(repo_id=MODEL_REPOS, filename=MODEL_FILENAME, local_dir=MODEL_DIR)
 
 image = (
-    Image.from_registry("nvidia/cuda:12.2.0-devel-ubuntu22.04", add_python="3.9")
-    .apt_install("build-essential")
+    Image.from_registry("nvidia/cuda:12.2.0-devel-ubuntu22.04", add_python="3.10")
+    .apt_install("build-essential", "clang")  # Install Clang
     .pip_install(
         "huggingface_hub",
         "sse_starlette",
-    ).run_commands("CMAKE_ARGS=\"-DLLAMA_CUBLAS=on\" FORCE_CMAKE=1 pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir", gpu=gpu.T4())
+    ).run_commands(
+        "export CC=clang",  # Set the CC environment variable to clang
+        "CMAKE_ARGS=\"-DLLAMA_CUBLAS=on\" FORCE_CMAKE=1 pip install llama-cpp-python==0.2.64 --force-reinstall --upgrade --no-cache-dir", gpu=gpu.T4())
     .run_function(download_model)
 )
 
