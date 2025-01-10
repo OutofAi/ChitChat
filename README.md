@@ -18,7 +18,7 @@
 
 <p>This is the first part of a collection of templates we are working on for promoting the concept of Model as a Serivce (MaaS). Mainly revolving around using Firebase/Modal/Stripe. One of the user friendliest and cheapest way to deploy your model and creating inference endpoint API is <a href="https://modal.com/">Modal</a>. This example shows the simplicity of deploying Mistral 7B Instruct v0.1 - GGUF with only few lines of code and deploying it on Modal. But you can change it to any model that is supported by LLamacpp</p>
 <hr />
-<p>Follow us on X for updates regarding the other templates<br /><a href="https://twitter.com/OutofAi">https://twitter.com/OutofAi</a><br /><a href="https://twitter.com/banterless_ai">https://twitter.com/banterless_ai</a></p>
+<p>Follow us on X for updates regarding the other templates<br /><a href="https://twitter.com/OutofAi">https://twitter.com/OutofAi</a></p>
 <p>and also support our channel <br /><a href="https://www.buymeacoffee.com/outofAI">https://www.buymeacoffee.com/outofAI</a></p>
 <hr />
 <h2 dir="auto" tabindex="-1">Prerequisites</h2>
