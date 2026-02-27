@@ -36,7 +36,7 @@
 <p>After a successful process you will be given entrypoint link in this format</p>
 <pre>Created entrypoint: https://[ORG_NAME]--[NAME]-entrypoint.modal.run</pre>
 <h2 dir="auto" tabindex="-1">Inference</h2>
-<p>We put together a website https://chitchatsource.com/ to simplify and enhance user experience, insert the provided link in previous step on that page to run inference on your model.</p>
+<p>We put together a website https://chit-chat-487fe.web.app/ to simplify and enhance user experience, insert the provided link in previous step on that page to run inference on your model.</p>
 
 <p align="center">
   <img src="https://github.com/OutofAi/ChitChatSource/assets/145302363/79a79b25-5d5b-4e81-b972-b49cc472de66" alt="ChitChat-Settings">
