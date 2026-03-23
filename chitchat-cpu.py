@@ -8,35 +8,37 @@ MODEL_DIR = "/model"
 MODEL_FILENAME = "mistral-7b-instruct-v0.2.Q8_0.gguf"
 MODEL_REPOS = "TheBloke/Mistral-7B-Instruct-v0.2-GGUF"
 
-incontext = ""
-
 web_app = FastAPI()
-
-CORS_ORIGIN_WHITELIST = ['https://chitchatsource.com', 'https://www.chitchatsource.com']
 
 web_app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGIN_WHITELIST,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["GET"],
     allow_headers=["*"],
 )
 
-
 def download_model():
-    from huggingface_hub import hf_hub_download
-    hf_hub_download(repo_id=MODEL_REPOS, filename=MODEL_FILENAME, local_dir=MODEL_DIR)
+    from huggingface_hub import snapshot_download
+    snapshot_download(
+        repo_id=MODEL_REPOS,
+        allow_patterns=[MODEL_FILENAME],
+        local_dir=MODEL_DIR,
+    )
 
 image = (
     Image.from_registry("ubuntu:22.04", add_python="3.10")
-    .apt_install("build-essential", "clang")  # Install Clang
+    .apt_install("build-essential", "clang", "ca-certificates")
+    .run_commands("update-ca-certificates")
     .pip_install(
+        "fastapi==0.115.12",
+        "starlette<0.47",
+        "sse-starlette==2.1.3",
         "huggingface_hub",
-        "sse_starlette",
-    ).run_commands(
-        "export CC=clang",  # Set the CC environment variable to clang
-        "pip install llama-cpp-python==0.2.64")
+        "uvicorn",
+    )
     .run_function(download_model)
+    .run_commands("CC=clang pip install llama-cpp-python")
 )
 
 app = App("chitchat-cpu", image=image)
@@ -46,39 +48,41 @@ class llamacpp:
     @enter()
     def load_model(self):
         from llama_cpp import Llama
-        self.llama = Llama(MODEL_DIR + "/" + MODEL_FILENAME, n_ctx=4096)
+        self.llama = Llama(f"{MODEL_DIR}/{MODEL_FILENAME}", n_ctx=4096)
+
     @method(is_generator=True)
     def predict(self, question: str, context: str):
-
         formatted_question = f"{context}<s>[INST]{question}[/INST]"
-        
-        return self.llama(
-        formatted_question,
-        temperature=0.1,
-        max_tokens=-1,
-        stop=["</s>"],
-        stream=True,
-        echo=True
-        )
 
-@app.function()
+        for item in self.llama(
+            formatted_question,
+            temperature=0.1,
+            max_tokens=-1,
+            stop=["</s>"],
+            stream=True,
+            echo=True,
+        ):
+            yield item
+
 @web_app.get("/llama")
-async def handle_llama_query(request: Request, question: str, context: List[str] = Query(None)):
-    
+async def handle_llama_query(
+    request: Request,
+    question: str,
+    context: List[str] = Query(None),
+):
     formatted_context = ""
 
-    if context and len(context) % 2 == 0:        
+    if context and len(context) % 2 == 0:
         for i in range(0, len(context), 2):
             formatted_context += f"<s>[INST]{context[i]}[/INST]{context[i+1]}</s>"
 
-    stream = llamacpp().predict.remote_gen(question, formatted_context)
+    stream = llamacpp().predict.remote_gen.aio(question, formatted_context)
 
     async def stream_responses():
-        for item in stream:
+        async for item in stream:
             if await request.is_disconnected():
                 break
-            response_text = item["choices"][0]["text"]
-            yield {"data": response_text}
+            yield {"data": item["choices"][0]["text"]}
 
     return EventSourceResponse(stream_responses())
 
